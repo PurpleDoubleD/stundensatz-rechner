@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Stundensatz-Rechner für Freelancer | Kostenlos berechnen</title>
+<meta name="description" content="Berechne deinen optimalen Stundensatz als Freelancer in Deutschland. Berücksichtigt Steuern, Versicherungen, Urlaub und Betriebskosten. 100% kostenlos, keine Anmeldung.">
+<meta name="keywords" content="Stundensatz Rechner, Freelancer, Selbständig, Stundensatz berechnen, Tagessatz, Deutschland">
+<link rel="canonical" href="https://stundensatz.pages.dev">
+<style>
+:root{--bg:#fafafa;--card:#fff;--primary:#2563eb;--primary-dark:#1d4ed8;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;--success:#16a34a;--warn:#f59e0b;--radius:12px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:720px;margin:0 auto;padding:24px 16px}
+header{text-align:center;margin-bottom:32px}
+h1{font-size:28px;font-weight:800;margin-bottom:8px;color:var(--text)}
+h1 span{color:var(--primary)}
+.subtitle{color:var(--muted);font-size:15px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.card h2{font-size:16px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.card h2 .icon{font-size:20px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:13px;font-weight:600;color:var(--muted);margin-bottom:4px}
+.field .hint{font-size:11px;color:var(--muted);margin-top:2px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+input[type=number],input[type=text]{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:15px;color:var(--text);background:#fff;transition:border .2s}
+input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.result-card{background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;border:none;text-align:center}
+.result-card h2{color:#fff;justify-content:center}
+.big-number{font-size:48px;font-weight:800;margin:8px 0}
+.big-number small{font-size:16px;font-weight:400;opacity:.8}
+.result-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-top:20px}
+.result-item{background:rgba(255,255,255,.15);border-radius:8px;padding:12px}
+.result-item .val{font-size:22px;font-weight:700}
+.result-item .lbl{font-size:11px;opacity:.8;margin-top:2px}
+.breakdown{margin-top:20px;text-align:left}
+.breakdown-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.15);font-size:14px}
+.breakdown-row:last-child{border:none;font-weight:700}
+.compare{margin-top:16px;background:rgba(255,255,255,.1);border-radius:8px;padding:16px;text-align:left}
+.compare h3{font-size:14px;margin-bottom:8px}
+.compare .row-c{display:flex;justify-content:space-between;font-size:13px;padding:4px 0}
+footer{text-align:center;margin-top:32px;color:var(--muted);font-size:12px}
+footer a{color:var(--primary)}
+@media(max-width:500px){.row{grid-template-columns:1fr}.result-grid{grid-template-columns:1fr 1fr}.big-number{font-size:36px}}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+<h1>Stundensatz<span>-Rechner</span></h1>
+<p class="subtitle">Berechne deinen optimalen Freelancer-Stundensatz in unter 2 Minuten.</p>
+</header>
+
+<div class="card">
+<h2><span class="icon">💰</span> Dein Wunsch-Einkommen</h2>
+<div class="field">
+<label>Gewünschtes Netto-Jahreseinkommen (€)</label>
+<input type="number" id="netIncome" value="50000" min="0" step="1000">
+<div class="hint">Was du nach Steuern & Versicherungen haben willst</div>
+</div>
+</div>
+
+<div class="card">
+<h2><span class="icon">📅</span> Arbeitszeit</h2>
+<div class="row">
+<div class="field">
+<label>Arbeitstage pro Woche</label>
+<input type="number" id="daysPerWeek" value="5" min="1" max="7" step="0.5">
+</div>
+<div class="field">
+<label>Stunden pro Tag</label>
+<input type="number" id="hoursPerDay" value="8" min="1" max="16" step="0.5">
+</div>
+</div>
+<div class="row">
+<div class="field">
+<label>Urlaubstage pro Jahr</label>
+<input type="number" id="vacationDays" value="30" min="0" max="100">
+</div>
+<div class="field">
+<label>Krankheitstage pro Jahr</label>
+<input type="number" id="sickDays" value="10" min="0" max="100">
+</div>
+</div>
+<div class="field">
+<label>Akquise & Admin (% der Zeit)</label>
+<input type="number" id="adminPercent" value="20" min="0" max="80">
+<div class="hint">Zeit für Kundenakquise, Buchhaltung, E-Mails — nicht fakturierbar</div>
+</div>
+</div>
+
+<div class="card">
+<h2><span class="icon">🏢</span> Betriebskosten (monatlich)</h2>
+<div class="row">
+<div class="field">
+<label>Büro / Coworking (€)</label>
+<input type="number" id="officeCost" value="200" min="0">
+</div>
+<div class="field">
+<label>Software & Tools (€)</label>
+<input type="number" id="toolsCost" value="100" min="0">
+</div>
+</div>
+<div class="row">
+<div class="field">
+<label>Versicherungen (€)</label>
+<input type="number" id="insuranceCost" value="400" min="0">
+<div class="hint">Kranken-, Pflege-, Haftpflicht, etc.</div>
+</div>
+<div class="field">
+<label>Sonstige Kosten (€)</label>
+<input type="number" id="otherCost" value="100" min="0">
+</div>
+</div>
+</div>
+
+<div class="card">
+<h2><span class="icon">📊</span> Steuern</h2>
+<div class="field">
+<label>Geschätzter Einkommenssteuersatz (%)</label>
+<input type="number" id="taxRate" value="30" min="0" max="60">
+<div class="hint">Durchschnittlich 25-42% je nach Einkommen. 30% ist ein guter Richtwert.</div>
+</div>
+</div>
+
+<div class="card result-card" id="results">
+<h2><span class="icon">🎯</span> Dein empfohlener Stundensatz</h2>
+<div class="big-number" id="hourlyRate">–</div>
+<div class="result-grid">
+<div class="result-item">
+<div class="val" id="dailyRate">–</div>
+<div class="lbl">Tagessatz</div>
+</div>
+<div class="result-item">
+<div class="val" id="monthlyRevenue">–</div>
+<div class="lbl">Monatsumsatz</div>
+</div>
+<div class="result-item">
+<div class="val" id="billableHours">–</div>
+<div class="lbl">Fakturierbare Std/Jahr</div>
+</div>
+</div>
+<div class="breakdown" id="breakdown"></div>
+<div class="compare" id="compare"></div>
+</div>
+
+<footer>
+<p>Stundensatz-Rechner — 100% kostenlos, keine Daten werden gespeichert.</p>
+<p>Alle Berechnungen laufen lokal in deinem Browser. <a href="https://github.com/purplefbihaze-cpu/stundensatz">Open Source</a></p>
+</footer>
+</div>
+
+<script>
+function fmt(n){return new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(n)}
+
+function calc(){
+  const net=+document.getElementById('netIncome').value||0;
+  const dpw=+document.getElementById('daysPerWeek').value||5;
+  const hpd=+document.getElementById('hoursPerDay').value||8;
+  const vac=+document.getElementById('vacationDays').value||0;
+  const sick=+document.getElementById('sickDays').value||0;
+  const admin=(+document.getElementById('adminPercent').value||0)/100;
+  const office=(+document.getElementById('officeCost').value||0)*12;
+  const tools=(+document.getElementById('toolsCost').value||0)*12;
+  const ins=(+document.getElementById('insuranceCost').value||0)*12;
+  const other=(+document.getElementById('otherCost').value||0)*12;
+  const tax=(+document.getElementById('taxRate').value||0)/100;
+
+  const totalCostsYear=office+tools+ins+other;
+  const grossNeeded=(net+totalCostsYear)/(1-tax);
+  const taxes=grossNeeded*tax;
+
+  const weeksYear=52;
+  const totalWorkDays=dpw*weeksYear;
+  const availableDays=totalWorkDays-vac-sick;
+  const billableDays=availableDays*(1-admin);
+  const billableH=billableDays*hpd;
+
+  const hourly=billableH>0?grossNeeded/billableH:0;
+  const daily=hourly*hpd;
+  const monthly=grossNeeded/12;
+
+  document.getElementById('hourlyRate').innerHTML=fmt(hourly)+' <small>/ Stunde</small>';
+  document.getElementById('dailyRate').textContent=fmt(daily);
+  document.getElementById('monthlyRevenue').textContent=fmt(monthly);
+  document.getElementById('billableHours').textContent=Math.round(billableH)+' h';
+
+  document.getElementById('breakdown').innerHTML=`
+    <div class="breakdown-row"><span>Netto-Wunsch</span><span>${fmt(net)}</span></div>
+    <div class="breakdown-row"><span>+ Steuern (${Math.round(tax*100)}%)</span><span>${fmt(taxes)}</span></div>
+    <div class="breakdown-row"><span>+ Betriebskosten</span><span>${fmt(totalCostsYear)}</span></div>
+    <div class="breakdown-row"><span>= Benötigter Jahresumsatz</span><span>${fmt(grossNeeded)}</span></div>
+  `;
+
+  // Vergleich mit Festanstellung
+  const equivGross=net/(1-0.21);// ~21% AN-Anteil Sozialversicherung
+  const equivMonthly=equivGross/12;
+  document.getElementById('compare').innerHTML=`
+    <h3>💼 Vergleich: Äquivalentes Angestellten-Gehalt</h3>
+    <div class="row-c"><span>Für ${fmt(net)} netto brauchst du als Angestellter ca.</span></div>
+    <div class="row-c"><span>Brutto-Jahresgehalt</span><span><b>${fmt(equivGross)}</b></span></div>
+    <div class="row-c"><span>Brutto-Monatsgehalt</span><span><b>${fmt(equivMonthly)}</b></span></div>
+    <div class="row-c" style="margin-top:8px;opacity:.7"><span>Als Freelancer brauchst du ${fmt(grossNeeded)} Umsatz/Jahr für dasselbe Netto.</span></div>
+  `;
+}
+
+document.querySelectorAll('input').forEach(i=>i.addEventListener('input',calc));
+calc();
+</script>
+</body>
+</html>
